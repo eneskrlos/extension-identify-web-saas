@@ -28,7 +28,7 @@ export default defineBackground(() => {
     }
 
     
-  }, { url: [{ urlMatches: 'https://*' }] })
+  }, { url: [{ urlMatches: '<all_urls>' }] })
 
   // Se ejecuta antes de obtener la solicitud
   browser.webRequest.onBeforeRequest.addListener((details) => {
@@ -44,13 +44,15 @@ export default defineBackground(() => {
   // se ejecuta cuando se completa la navegacion 
   browser.webRequest.onCompleted.addListener((details) => {
     // si la url q contiene el detalle esta dentro de las urls detectadas obtengo su encabezado
-    if (arrayIdpDetected.some(idp => idp === details.url)) {
+    // if (arrayIdpDetected.some(idp => idp === details.url)) {
       const headers = details.responseHeaders // obtengo el encabezado de la respuesta
       
 
       const { documentUrl, ip, url, statusCode, requestId, tabId } = details // obtengo datos relevantes de la peticion
       if (headers) { // si existe el encabezado
+        console.log(headers)
         const tokenHeader = headers.find(header => header.name.toLowerCase() === 'authorization'); // obtengo el token si el encabezado tiene la palabra clave authorization
+        console.log('tokenHeader:', tokenHeader)
         if (tokenHeader) { // si existe 
           console.log('Token:', tokenHeader.value); // obtengo el token
           browser.storage.local.set({ 'dataUser': {documentUrl, ip, url, statusCode, requestId, tabId, token : tokenHeader.value }}) // guardo los datos en el localstore de la extencion
@@ -59,7 +61,7 @@ export default defineBackground(() => {
         }
 
       }
-    }
+    // }
   }, { urls: ["<all_urls>"] }, ["responseHeaders"]) // Configuro el listener el cual indico para que urls quiero que se aplique y  en la segunda opcion es el objeto que quiero obtener dentro del detail
   
 });

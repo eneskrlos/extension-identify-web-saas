@@ -7,7 +7,7 @@ export default defineConfig({
         description: 'wxt test',
         version: '1.0.0',
         permissions: ['storage', 'webNavigation', 'webRequest', 'notifications'],
-        host_permissions: ["*://*.google.com/*"],
+        // host_permissions: ["*://*.google.com/*"],
     },
     runner: {
         startUrls: [
